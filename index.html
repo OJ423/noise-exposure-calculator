@@ -457,13 +457,13 @@
                 const noiseLevel = sample.noiseLevel;
                 const duration = sample.duration; // in hours
 
-                if (noiseLevel >= 90 && duration > (45 / 60)) { // 45 minutes = 0.75 hours
+                if (noiseLevel >= 90 && duration >= (45 / 60)) { // 45 minutes = 0.75 hours
                     riskAssessmentNeeded = true;
                     riskAssessmentDetails.push(`Noise level of ${noiseLevel} dB(A) for ${duration.toFixed(2)} hours (exceeds 45 minutes for 90 dB(A) noise).`);
-                } else if (noiseLevel >= 85 && duration > 2) {
+                } else if (noiseLevel >= 85 && duration >= 2) {
                     riskAssessmentNeeded = true;
                     riskAssessmentDetails.push(`Noise level of ${noiseLevel} dB(A) for ${duration.toFixed(2)} hours (exceeds 2 hours for 85 dB(A) noise).`);
-                } else if (noiseLevel >= 80 && duration > 6) {
+                } else if (noiseLevel >= 80 && duration >= 6) {
                     riskAssessmentNeeded = true;
                     riskAssessmentDetails.push(`Noise level of ${noiseLevel} dB(A) for ${duration.toFixed(2)} hours (exceeds 6 hours for 80 dB(A) noise).`);
                 }
