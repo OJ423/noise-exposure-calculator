@@ -819,7 +819,7 @@
         clearWeeklyError();
         const dailyLex8hValues = [];
         let isValid = true;
-        const numberOfDaysInWeek = 7; // Now for 7 days
+        const numberOfDaysInWeek = 7;
 
         for (let i = 0; i < numberOfDaysInWeek; i++) {
           const input = document.getElementById(`dailyLex8h_${i}`);
@@ -866,7 +866,7 @@
         // The formula averages the linear energies over the number of days with valid input (non-empty, non-negative).
         // This implicitly handles cases where someone works fewer than 7 days, as only entered values contribute.
         let LexW =
-          10 * Math.log10(sumOfDailyEnergies / dailyLex8hValues.length);
+          10 * Math.log10(sumOfDailyEnergies / 5);
 
         LexW = LexW.toFixed(2);
 
