@@ -777,6 +777,7 @@
                     <p class="mt-2">This guidance is based on typical scenarios where a risk assessment is needed if the noise is like this for more than the specified duration.</p>
                 `;
         }
+        sendHeight()
       }
 
       /**
@@ -897,6 +898,7 @@
           weeklyMessageDiv.classList.add("message-success");
           weeklyMessageDiv.innerHTML = `The calculated L<sub>EX,w</sub> (${LexW} dB(A)) is below the Lower Exposure Action Value (80 dB(A)). Good work!`;
         }
+        sendHeight()
       }
 
       // Initialize with one sample row on load for the daily calculator
