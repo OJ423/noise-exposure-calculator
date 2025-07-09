@@ -1,252 +1,489 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Noise Exposure Calculator</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* Custom styles for better aesthetics and font */
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f0f4f8; /* Light blue-gray background */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            padding: 20px;
-            box-sizing: border-box;
-        }
-        .container {
-            background-color: #ffffff;
-            padding: 32px;
-            border-radius: 12px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-            width: 100%;
-            max-width: 768px; /* Max width for larger screens */
-            border: 1px solid #e2e8f0; /* Light border */
-        }
+      /* Custom styles for better aesthetics and font */
+      body {
+        font-family: "Inter", sans-serif;
+        background-color: #f0f4f8; /* Light blue-gray background */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        padding: 20px;
+        box-sizing: border-box;
+      }
+      .container {
+        background-color: #ffffff;
+        padding: 32px;
+        border-radius: 12px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        width: 100%;
+        max-width: 768px; /* Max width for larger screens */
+        border: 1px solid #e2e8f0; /* Light border */
+      }
+      .input-group {
+        display: flex;
+        flex-wrap: wrap; /* Allow wrapping on small screens */
+        gap: 16px;
+        margin-bottom: 16px;
+        align-items: center;
+      }
+      .input-group label {
+        min-width: 80px; /* Ensure labels have some space */
+      }
+      .input-field {
+        flex-grow: 1; /* Allow input fields to take available space */
+        min-width: 120px; /* Minimum width for input fields */
+      }
+      .btn {
+        padding: 10px 20px;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s ease-in-out;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      }
+      .btn-primary {
+        background-color: #2563eb; /* Blue */
+        color: white;
+      }
+      .btn-primary:hover {
+        background-color: #1d4ed8; /* Darker blue */
+        transform: translateY(-1px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+      }
+      .btn-secondary {
+        background-color: #e2e8f0; /* Light gray */
+        color: #334155; /* Darker text */
+      }
+      .btn-secondary:hover {
+        background-color: #cbd5e1; /* Darker gray */
+        transform: translateY(-1px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+      }
+      .btn-danger {
+        background-color: #ef4444; /* Red */
+        color: white;
+      }
+      .btn-danger:hover {
+        background-color: #dc2626; /* Darker red */
+        transform: translateY(-1px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+      }
+      .message-box {
+        padding: 12px;
+        border-radius: 8px;
+        margin-top: 20px;
+        font-weight: 500;
+      }
+      .message-success {
+        background-color: #d1fae5; /* Light green */
+        color: #065f46; /* Dark green text */
+        border: 1px solid #34d399;
+      }
+      .message-warning {
+        background-color: #fef3c7; /* Light yellow */
+        color: #b45309; /* Dark yellow text */
+        border: 1px solid #fcd34d;
+      }
+      .message-error {
+        background-color: #fee2e2; /* Light red */
+        color: #991b1b; /* Dark red text */
+        border: 1px solid #ef4444;
+      }
+      .risk-assessment-warning {
+        background-color: #ffe0b2; /* Light orange */
+        color: #e65100; /* Dark orange text */
+        border: 1px solid #ff9800;
+        padding: 12px;
+        border-radius: 8px;
+        margin-top: 10px;
+        font-weight: 500;
+      }
+      /* Responsive adjustments */
+      @media (max-width: 640px) {
         .input-group {
-            display: flex;
-            flex-wrap: wrap; /* Allow wrapping on small screens */
-            gap: 16px;
-            margin-bottom: 16px;
-            align-items: center;
+          flex-direction: column;
+          align-items: stretch;
         }
-        .input-group label {
-            min-width: 80px; /* Ensure labels have some space */
+        .input-group > div {
+          width: 100%;
         }
         .input-field {
-            flex-grow: 1; /* Allow input fields to take available space */
-            min-width: 120px; /* Minimum width for input fields */
+          min-width: unset; /* Remove min-width for full flexibility */
         }
-        .btn {
-            padding: 10px 20px;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s ease-in-out;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        }
-        .btn-primary {
-            background-color: #2563eb; /* Blue */
-            color: white;
-        }
-        .btn-primary:hover {
-            background-color: #1d4ed8; /* Darker blue */
-            transform: translateY(-1px);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-        }
-        .btn-secondary {
-            background-color: #e2e8f0; /* Light gray */
-            color: #334155; /* Darker text */
-        }
-        .btn-secondary:hover {
-            background-color: #cbd5e1; /* Darker gray */
-            transform: translateY(-1px);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-        }
-        .btn-danger {
-            background-color: #ef4444; /* Red */
-            color: white;
-        }
-        .btn-danger:hover {
-            background-color: #dc2626; /* Darker red */
-            transform: translateY(-1px);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-        }
-        .message-box {
-            padding: 12px;
-            border-radius: 8px;
-            margin-top: 20px;
-            font-weight: 500;
-        }
-        .message-success {
-            background-color: #d1fae5; /* Light green */
-            color: #065f46; /* Dark green text */
-            border: 1px solid #34d399;
-        }
-        .message-warning {
-            background-color: #fef3c7; /* Light yellow */
-            color: #b45309; /* Dark yellow text */
-            border: 1px solid #fcd34d;
-        }
-        .message-error {
-            background-color: #fee2e2; /* Light red */
-            color: #991b1b; /* Dark red text */
-            border: 1px solid #ef4444;
-        }
-        .risk-assessment-warning {
-            background-color: #ffe0b2; /* Light orange */
-            color: #e65100; /* Dark orange text */
-            border: 1px solid #ff9800;
-            padding: 12px;
-            border-radius: 8px;
-            margin-top: 10px;
-            font-weight: 500;
-        }
-        /* Responsive adjustments */
-        @media (max-width: 640px) {
-            .input-group {
-                flex-direction: column;
-                align-items: stretch;
-            }
-            .input-group > div {
-                width: 100%;
-            }
-            .input-field {
-                min-width: unset; /* Remove min-width for full flexibility */
-            }
-        }
+      }
     </style>
     <!-- Polyfill for Math.log10 for older browsers, though modern ones usually have it -->
     <script>
-        if (Math.log10 === undefined) {
-            Math.log10 = function(x) {
-                return Math.log(x) / Math.log(10);
-            };
-        }
+      if (Math.log10 === undefined) {
+        Math.log10 = function (x) {
+          return Math.log(x) / Math.log(10);
+        };
+      }
     </script>
-</head>
-<body>
+  </head>
+  <body>
     <div class="container">
-        <h1 class="text-3xl font-bold text-left text-gray-800 mb-8">Daily Noise Exposure Calculator (<span class="text-sm">L<sub>EX,8h</sub></span>)</h1>
-        <p class="text-gray-600 mb-6">Add your noise monitoring samples below, use the button to add more samples.</p>
+      <h1 class="text-3xl font-bold text-left text-gray-800 mb-8">
+        Daily Noise Exposure Calculator (<span class="text-sm"
+          >L<sub>EX,8h</sub></span
+        >)
+      </h1>
+      <p class="text-gray-600 mb-6">
+        Add your noise monitoring samples below, use the button to add more
+        samples.
+      </p>
 
-        <div id="samples-container">
-            <!-- Sample input rows will be added here by JavaScript -->
-            <div id="sampleRow0" class="input-group bg-gray-50 p-4 rounded-lg shadow-sm mb-4">
-                <div class="flex-1">
-                    <label for="noiseLevel0" class="block text-sm font-medium text-gray-700 mb-1">Noise Level (dB(A))</label>
-                    <input type="number" id="noiseLevel0" class="input-field mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm" placeholder="e.g., 85">
-                </div>
-                <div class="flex-1">
-                    <label for="duration0" class="block text-sm font-medium text-gray-700 mb-1">Duration (Hours)</label>
-                    <input type="number" id="duration0" class="input-field mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm" placeholder="e.g., 4">
-                </div>
-                <div class="flex-1">
-                    <label for="durationMinutes0" class="block text-sm font-medium text-gray-700 mb-1">Duration (Minutes)</label>
-                    <input type="number" id="durationMinutes0" class="input-field mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm" placeholder="e.g., 30">
-                </div>
-                <button type="button" onclick="removeSampleRow(0)" class="btn btn-danger self-end px-4 py-2 mt-4 sm:mt-0">Remove</button>
+      <div id="samples-container">
+        <!-- Sample input rows will be added here by JavaScript -->
+        <div
+          id="sampleRow0"
+          class="input-group bg-gray-50 p-4 rounded-lg shadow-sm mb-4"
+        >
+          <div class="flex-1">
+            <label
+              for="noiseLevel0"
+              class="block text-sm font-medium text-gray-700 mb-1"
+              >Noise Level (dB(A))</label
+            >
+            <input
+              type="number"
+              id="noiseLevel0"
+              class="input-field mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+              placeholder="e.g., 85"
+            />
+          </div>
+          <div class="flex-1">
+            <label
+              for="duration0"
+              class="block text-sm font-medium text-gray-700 mb-1"
+              >Duration (Hours)</label
+            >
+            <input
+              type="number"
+              id="duration0"
+              class="input-field mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+              placeholder="e.g., 4"
+            />
+          </div>
+          <div class="flex-1">
+            <label
+              for="durationMinutes0"
+              class="block text-sm font-medium text-gray-700 mb-1"
+              >Duration (Minutes)</label
+            >
+            <input
+              type="number"
+              id="durationMinutes0"
+              class="input-field mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+              placeholder="e.g., 30"
+            />
+          </div>
+          <button
+            type="button"
+            onclick="removeSampleRow(0)"
+            class="btn btn-danger self-end px-4 py-2 mt-4 sm:mt-0"
+          >
+            Remove
+          </button>
+        </div>
+      </div>
+
+      <div class="flex flex-col sm:flex-row gap-4 mb-6">
+        <button
+          type="button"
+          onclick="addSampleRow()"
+          class="btn btn-secondary w-full sm:w-auto"
+        >
+          Add Another Daily Sample
+        </button>
+        <button
+          type="button"
+          onclick="calculateNoiseExposure()"
+          class="btn btn-primary w-full sm:w-auto"
+        >
+          Calculate <span class="text-sm">L<sub>EX,8h</sub></span>
+        </button>
+      </div>
+
+      <div
+        id="daily-results"
+        class="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg hidden"
+      >
+        <h2 class="text-xl font-semibold text-blue-800 mb-2">
+          Daily Calculation Results:
+        </h2>
+        <p class="text-gray-700 mb-2">
+          8-hour Time-Weighted Average
+          <span class="text-sm">L<sub>EX,8h</sub></span
+          >: <span id="lex8hResult" class="font-bold text-blue-700"></span>
+        </p>
+        <div id="daily-message" class="message-box mt-4"></div>
+        <div
+          id="risk-assessment-message"
+          class="risk-assessment-warning hidden"
+        ></div>
+      </div>
+
+      <div
+        id="daily-error-message"
+        class="message-box message-error hidden"
+      ></div>
+
+      <!-- Weekly Noise Exposure Calculator Section -->
+      <div class="mt-12 pt-8 border-t-2 border-gray-200">
+        <h1 class="text-3xl font-bold text-left text-gray-800 mb-8">
+          Weekly Noise Exposure Calculator (<span class="text-sm"
+            >L<sub>EX,w</sub></span
+          >)
+        </h1>
+        <p class="text-gray-600 mb-6">
+          Enter the calculated Daily Noise Exposure (<span class="text-sm"
+            >L<sub>EX,8h</sub></span
+          >) for each day of the week.
+        </p>
+        <div class="flex gap-4 items-center rounded-lg bg-blue-50 p-2 mb-6">
+          <svg
+            width="42px"
+            height="42px"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="#3d69d1"
+            stroke="#3d69d1"
+          >
+            <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+            <g
+              id="SVGRepo_tracerCarrier"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            ></g>
+            <g id="SVGRepo_iconCarrier">
+              <title></title>
+              <g id="Complete">
+                <g id="alert-circle">
+                  <g>
+                    <line
+                      fill="none"
+                      stroke="#3d69d1"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      x1="12"
+                      x2="12"
+                      y1="8"
+                      y2="12"
+                    ></line>
+                    <line
+                      fill="none"
+                      stroke="#3d69d1"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      x1="12"
+                      x2="12"
+                      y1="16"
+                      y2="16"
+                    ></line>
+                    <circle
+                      cx="12"
+                      cy="12"
+                      data-name="--Circle"
+                      fill="none"
+                      id="_--Circle"
+                      r="10"
+                      stroke="#3d69d1"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                    ></circle>
+                  </g>
+                </g>
+              </g>
+            </g>
+          </svg>
+          <p>
+            Only fill in data for days worked, e.g. 4 days for a 4-day week.
+          </p>
+        </div>
+
+        <div id="weekly-samples-container">
+          <div class="input-group bg-gray-50 p-4 rounded-lg shadow-sm mb-4">
+            <div class="flex-1">
+              <label
+                for="dailyLex8h_0"
+                class="block text-sm font-medium text-gray-700 mb-1"
+                >Day 1
+                <span class="text-sm">L<sub>EX,8h</sub></span> (dB(A))</label
+              >
+              <input
+                type="number"
+                id="dailyLex8h_0"
+                class="input-field mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                placeholder="e.g., 82"
+              />
             </div>
+            <div class="flex-1">
+              <label
+                for="dailyLex8h_1"
+                class="block text-sm font-medium text-gray-700 mb-1"
+                >Day 2
+                <span class="text-sm">L<sub>EX,8h</sub></span> (dB(A))</label
+              >
+              <input
+                type="number"
+                id="dailyLex8h_1"
+                class="input-field mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                placeholder="e.g., 85"
+              />
+            </div>
+            <div class="flex-1">
+              <label
+                for="dailyLex8h_2"
+                class="block text-sm font-medium text-gray-700 mb-1"
+                >Day 3
+                <span class="text-sm">L<sub>EX,8h</sub></span> (dB(A))</label
+              >
+              <input
+                type="number"
+                id="dailyLex8h_2"
+                class="input-field mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                placeholder="e.g., 78"
+              />
+            </div>
+          </div>
+          <div class="input-group bg-gray-50 p-4 rounded-lg shadow-sm mb-4">
+            <div class="flex-1">
+              <label
+                for="dailyLex8h_3"
+                class="block text-sm font-medium text-gray-700 mb-1"
+                >Day 4
+                <span class="text-sm">L<sub>EX,8h</sub></span> (dB(A))</label
+              >
+              <input
+                type="number"
+                id="dailyLex8h_3"
+                class="input-field mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                placeholder="e.g., 90"
+              />
+            </div>
+            <div class="flex-1">
+              <label
+                for="dailyLex8h_4"
+                class="block text-sm font-medium text-gray-700 mb-1"
+                >Day 5
+                <span class="text-sm">L<sub>EX,8h</sub></span> (dB(A))</label
+              >
+              <input
+                type="number"
+                id="dailyLex8h_4"
+                class="input-field mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                placeholder="e.g., 81"
+              />
+            </div>
+            <div class="flex-1">
+              <label
+                for="dailyLex8h_5"
+                class="block text-sm font-medium text-gray-700 mb-1"
+                >Day 6
+                <span class="text-sm">L<sub>EX,8h</sub></span> (dB(A))</label
+              >
+              <input
+                type="number"
+                id="dailyLex8h_5"
+                class="input-field mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                placeholder="e.g., 75"
+              />
+            </div>
+          </div>
+          <div class="input-group bg-gray-50 p-4 rounded-lg shadow-sm mb-4">
+            <div class="flex-1">
+              <label
+                for="dailyLex8h_6"
+                class="block text-sm font-medium text-gray-700 mb-1"
+                >Day 7
+                <span class="text-sm">L<sub>EX,8h</sub></span> (dB(A))</label
+              >
+              <input
+                type="number"
+                id="dailyLex8h_6"
+                class="input-field mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                placeholder="e.g., 88"
+              />
+            </div>
+            <div class="flex-1">
+              <!-- Empty div for layout consistency -->
+            </div>
+            <div class="flex-1">
+              <!-- Empty div for layout consistency -->
+            </div>
+          </div>
         </div>
 
         <div class="flex flex-col sm:flex-row gap-4 mb-6">
-            <button type="button" onclick="addSampleRow()" class="btn btn-secondary w-full sm:w-auto">Add Another Daily Sample</button>
-            <button type="button" onclick="calculateNoiseExposure()" class="btn btn-primary w-full sm:w-auto">Calculate <span class="text-sm">L<sub>EX,8h</sub></span></button>
+          <button
+            type="button"
+            onclick="calculateWeeklyNoiseExposure()"
+            class="btn btn-primary w-full sm:w-auto"
+          >
+            Calculate <span class="text-sm">L<sub>EX,w</sub></span>
+          </button>
+          <button
+            type="button"
+            onclick="clearWeeklyForm()"
+            class="btn btn-secondary w-full sm:w-auto"
+          >
+            Clear Form
+          </button>
         </div>
 
-        <div id="daily-results" class="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg hidden">
-            <h2 class="text-xl font-semibold text-blue-800 mb-2">Daily Calculation Results:</h2>
-            <p class="text-gray-700 mb-2">8-hour Time-Weighted Average <span class="text-sm">L<sub>EX,8h</sub></span>: <span id="lex8hResult" class="font-bold text-blue-700"></span></p>
-            <div id="daily-message" class="message-box mt-4"></div>
-            <div id="risk-assessment-message" class="risk-assessment-warning hidden"></div>
+        <div
+          id="weekly-results"
+          class="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg hidden"
+        >
+          <h2 class="text-xl font-semibold text-blue-800 mb-2">
+            Weekly Calculation Results:
+          </h2>
+          <p class="text-gray-700 mb-2">
+            Weekly Average <span class="text-sm">L<sub>EX,w</sub></span
+            >: <span id="lexwResult" class="font-bold text-blue-700"></span>
+          </p>
+          <div id="weekly-message" class="message-box mt-4"></div>
         </div>
 
-        <div id="daily-error-message" class="message-box message-error hidden"></div>
-
-        <!-- Weekly Noise Exposure Calculator Section -->
-        <div class="mt-12 pt-8 border-t-2 border-gray-200">
-            <h1 class="text-3xl font-bold text-left text-gray-800 mb-8">Weekly Noise Exposure Calculator (<span class="text-sm">L<sub>EX,w</sub></span>)</h1>
-            <p class="text-gray-600 mb-6">Enter the calculated Daily Noise Exposure (<span class="text-sm">L<sub>EX,8h</sub></span>) for each day of the week.</p>
-            <div class="flex gap-4 items-center rounded-lg bg-blue-50 p-2 mb-6">
-              <svg width="42px" height="42px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="#3d69d1" stroke="#3d69d1"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <title></title> <g id="Complete"> <g id="alert-circle"> <g> <line fill="none" stroke="#3d69d1" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" x1="12" x2="12" y1="8" y2="12"></line> <line fill="none" stroke="#3d69d1" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" x1="12" x2="12" y1="16" y2="16"></line> <circle cx="12" cy="12" data-name="--Circle" fill="none" id="_--Circle" r="10" stroke="#3d69d1" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></circle> </g> </g> </g> </g></svg>
-              <p>Only fill in data for days worked, e.g. 4 days for a 4-day week.</p>
-            </div>
-
-            <div id="weekly-samples-container">
-                <div class="input-group bg-gray-50 p-4 rounded-lg shadow-sm mb-4">
-                    <div class="flex-1">
-                        <label for="dailyLex8h_0" class="block text-sm font-medium text-gray-700 mb-1">Day 1 <span class="text-sm">L<sub>EX,8h</sub></span> (dB(A))</label>
-                        <input type="number" id="dailyLex8h_0" class="input-field mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm" placeholder="e.g., 82">
-                    </div>
-                    <div class="flex-1">
-                        <label for="dailyLex8h_1" class="block text-sm font-medium text-gray-700 mb-1">Day 2 <span class="text-sm">L<sub>EX,8h</sub></span> (dB(A))</label>
-                        <input type="number" id="dailyLex8h_1" class="input-field mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm" placeholder="e.g., 85">
-                    </div>
-                    <div class="flex-1">
-                        <label for="dailyLex8h_2" class="block text-sm font-medium text-gray-700 mb-1">Day 3 <span class="text-sm">L<sub>EX,8h</sub></span> (dB(A))</label>
-                        <input type="number" id="dailyLex8h_2" class="input-field mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm" placeholder="e.g., 78">
-                    </div>
-                </div>
-                <div class="input-group bg-gray-50 p-4 rounded-lg shadow-sm mb-4">
-                    <div class="flex-1">
-                        <label for="dailyLex8h_3" class="block text-sm font-medium text-gray-700 mb-1">Day 4 <span class="text-sm">L<sub>EX,8h</sub></span> (dB(A))</label>
-                        <input type="number" id="dailyLex8h_3" class="input-field mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm" placeholder="e.g., 90">
-                    </div>
-                    <div class="flex-1">
-                        <label for="dailyLex8h_4" class="block text-sm font-medium text-gray-700 mb-1">Day 5 <span class="text-sm">L<sub>EX,8h</sub></span> (dB(A))</label>
-                        <input type="number" id="dailyLex8h_4" class="input-field mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm" placeholder="e.g., 81">
-                    </div>
-                    <div class="flex-1">
-                        <label for="dailyLex8h_5" class="block text-sm font-medium text-gray-700 mb-1">Day 6 <span class="text-sm">L<sub>EX,8h</sub></span> (dB(A))</label>
-                        <input type="number" id="dailyLex8h_5" class="input-field mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm" placeholder="e.g., 75">
-                    </div>
-                </div>
-                 <div class="input-group bg-gray-50 p-4 rounded-lg shadow-sm mb-4">
-                    <div class="flex-1">
-                        <label for="dailyLex8h_6" class="block text-sm font-medium text-gray-700 mb-1">Day 7 <span class="text-sm">L<sub>EX,8h</sub></span> (dB(A))</label>
-                        <input type="number" id="dailyLex8h_6" class="input-field mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm" placeholder="e.g., 88">
-                    </div>
-                    <div class="flex-1">
-                        <!-- Empty div for layout consistency -->
-                    </div>
-                    <div class="flex-1">
-                        <!-- Empty div for layout consistency -->
-                    </div>
-                </div>
-            </div>
-
-            <div class="flex flex-col sm:flex-row gap-4 mb-6">
-                <button type="button" onclick="calculateWeeklyNoiseExposure()" class="btn btn-primary w-full sm:w-auto">Calculate <span class="text-sm">L<sub>EX,w</sub></span></button>
-                <button type="button" onclick="clearWeeklyForm()" class="btn btn-secondary w-full sm:w-auto">Clear Form</button>
-            </div>
-
-            <div id="weekly-results" class="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg hidden">
-                <h2 class="text-xl font-semibold text-blue-800 mb-2">Weekly Calculation Results:</h2>
-                <p class="text-gray-700 mb-2">Weekly Average <span class="text-sm">L<sub>EX,w</sub></span>: <span id="lexwResult" class="font-bold text-blue-700"></span></p>
-                <div id="weekly-message" class="message-box mt-4"></div>
-            </div>
-
-            <div id="weekly-error-message" class="message-box message-error hidden"></div>
-        </div>
+        <div
+          id="weekly-error-message"
+          class="message-box message-error hidden"
+        ></div>
+      </div>
     </div>
 
     <script>
-        let sampleCount = 1; // Keep track of the number of sample rows for dynamically added rows (Daily Calculator)
+      let sampleCount = 1; // Keep track of the number of sample rows for dynamically added rows (Daily Calculator)
 
-        /**
-         * Adds a new row for noise level and duration input for the Daily Calculator.
-         */
-        function addSampleRow() {
-            const samplesContainer = document.getElementById('samples-container');
-            const newRow = document.createElement('div');
-            newRow.classList.add('input-group', 'bg-gray-50', 'p-4', 'rounded-lg', 'shadow-sm', 'mb-4');
-            newRow.setAttribute('id', `sampleRow${sampleCount}`);
+      /**
+       * Adds a new row for noise level and duration input for the Daily Calculator.
+       */
+      function addSampleRow() {
+        const samplesContainer = document.getElementById("samples-container");
+        const newRow = document.createElement("div");
+        newRow.classList.add(
+          "input-group",
+          "bg-gray-50",
+          "p-4",
+          "rounded-lg",
+          "shadow-sm",
+          "mb-4"
+        );
+        newRow.setAttribute("id", `sampleRow${sampleCount}`);
 
-            newRow.innerHTML = `
+        newRow.innerHTML = `
                 <div class="flex-1">
                     <label for="noiseLevel${sampleCount}" class="block text-sm font-medium text-gray-700 mb-1">Noise Level (dB(A))</label>
                     <input type="number" id="noiseLevel${sampleCount}" class="input-field mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm" placeholder="e.g., 85">
@@ -261,218 +498,277 @@
                 </div>
                 <button type="button" onclick="removeSampleRow(${sampleCount})" class="btn btn-danger self-end px-4 py-2 mt-4 sm:mt-0">Remove</button>
             `;
-            samplesContainer.appendChild(newRow);
-            
-            // After adding a new row, ensure its remove button is visible
-            const newlyAddedRemoveBtn = newRow.querySelector('.btn-danger');
-            if (newlyAddedRemoveBtn) {
-                 newlyAddedRemoveBtn.style.display = 'inline-block';
-            }
+        samplesContainer.appendChild(newRow);
 
-            // If there's now more than one row, ensure the initial row's remove button is also visible
-            const allCurrentRows = document.querySelectorAll('#samples-container .input-group');
-            if (allCurrentRows.length > 1) {
-                const firstRowRemoveBtn = document.getElementById('sampleRow0')?.querySelector('.btn-danger');
-                if (firstRowRemoveBtn) {
-                    firstRowRemoveBtn.style.display = 'inline-block';
-                }
-            }
-
-            sampleCount++;
+        // After adding a new row, ensure its remove button is visible
+        const newlyAddedRemoveBtn = newRow.querySelector(".btn-danger");
+        if (newlyAddedRemoveBtn) {
+          newlyAddedRemoveBtn.style.display = "inline-block";
         }
 
-        /**
-         * Removes a sample row from the Daily Calculator.
-         * @param {number} id The ID of the row to remove.
-         */
-        function removeSampleRow(id) {
-            const rowToRemove = document.getElementById(`sampleRow${id}`);
-            if (rowToRemove) {
-                rowToRemove.remove();
-            }
-
-            const remainingRows = document.querySelectorAll('#samples-container .input-group');
-            if (remainingRows.length === 0) {
-                // If no rows left, add a new one and reset sampleCount for the next 'initial' row
-                sampleCount = 0; // Reset sampleCount so the next added row will be sampleRow0
-                addSampleRow(); // This will create sampleRow0
-                // Hide the remove button for this newly created 'initial' row
-                const newInitialRow = document.getElementById(`sampleRow0`);
-                if (newInitialRow) {
-                    const removeBtn = newInitialRow.querySelector('.btn-danger');
-                    if (removeBtn) {
-                        removeBtn.style.display = 'none';
-                    }
-                }
-            } else if (remainingRows.length === 1) {
-                // If only one row remains, ensure its remove button is hidden
-                const soleRemainingRow = remainingRows[0];
-                const removeBtn = soleRemainingRow.querySelector('.btn-danger');
-                if (removeBtn) {
-                    removeBtn.style.display = 'none';
-                }
-            }
+        // If there's now more than one row, ensure the initial row's remove button is also visible
+        const allCurrentRows = document.querySelectorAll(
+          "#samples-container .input-group"
+        );
+        if (allCurrentRows.length > 1) {
+          const firstRowRemoveBtn = document
+            .getElementById("sampleRow0")
+            ?.querySelector(".btn-danger");
+          if (firstRowRemoveBtn) {
+            firstRowRemoveBtn.style.display = "inline-block";
+          }
         }
 
-        /**
-         * Displays an error message for the Daily Calculator.
-         * @param {string} msg The message to display.
-         */
-        function displayDailyError(msg) {
-            const errorMessageDiv = document.getElementById('daily-error-message');
-            errorMessageDiv.textContent = msg;
-            errorMessageDiv.classList.remove('hidden');
-            document.getElementById('daily-results').classList.add('hidden'); // Hide results if there's an error
+        sampleCount++;
+      }
+
+      /**
+       * Removes a sample row from the Daily Calculator.
+       * @param {number} id The ID of the row to remove.
+       */
+      function removeSampleRow(id) {
+        const rowToRemove = document.getElementById(`sampleRow${id}`);
+        if (rowToRemove) {
+          rowToRemove.remove();
         }
 
-        /**
-         * Clears any displayed error messages for the Daily Calculator.
-         */
-        function clearDailyError() {
-            document.getElementById('daily-error-message').classList.add('hidden');
-            document.getElementById('daily-error-message').textContent = '';
-        }
-
-        /**
-         * Calculates the 8-hour Time-Weighted Average (TWA) noise exposure ($L_{EX,8h}$).
-         */
-        function calculateNoiseExposure() {
-            clearDailyError(); // Clear previous errors
-            const samples = [];
-            let isValid = true;
-
-            // Get all input rows for the daily calculator
-            const inputGroups = document.querySelectorAll('#samples-container .input-group');
-
-            if (inputGroups.length === 0) {
-                displayDailyError("Please add at least one noise sample.");
-                return;
+        const remainingRows = document.querySelectorAll(
+          "#samples-container .input-group"
+        );
+        if (remainingRows.length === 0) {
+          // If no rows left, add a new one and reset sampleCount for the next 'initial' row
+          sampleCount = 0; // Reset sampleCount so the next added row will be sampleRow0
+          addSampleRow(); // This will create sampleRow0
+          // Hide the remove button for this newly created 'initial' row
+          const newInitialRow = document.getElementById(`sampleRow0`);
+          if (newInitialRow) {
+            const removeBtn = newInitialRow.querySelector(".btn-danger");
+            if (removeBtn) {
+              removeBtn.style.display = "none";
             }
+          }
+        } else if (remainingRows.length === 1) {
+          // If only one row remains, ensure its remove button is hidden
+          const soleRemainingRow = remainingRows[0];
+          const removeBtn = soleRemainingRow.querySelector(".btn-danger");
+          if (removeBtn) {
+            removeBtn.style.display = "none";
+          }
+        }
+      }
 
-            inputGroups.forEach((group, index) => {
-                const noiseLevelInput = group.querySelector(`input[id^="noiseLevel"]`);
-                const durationHoursInput = group.querySelector(`input[id^="duration"]`);
-                const durationMinutesInput = group.querySelector(`input[id^="durationMinutes"]`);
+      /**
+       * Displays an error message for the Daily Calculator.
+       * @param {string} msg The message to display.
+       */
+      function displayDailyError(msg) {
+        const errorMessageDiv = document.getElementById("daily-error-message");
+        errorMessageDiv.textContent = msg;
+        errorMessageDiv.classList.remove("hidden");
+        document.getElementById("daily-results").classList.add("hidden"); // Hide results if there's an error
+      }
 
-                const noiseLevel = parseFloat(noiseLevelInput.value);
-                const durationHours = parseFloat(durationHoursInput.value || 0);
-                const durationMinutes = parseFloat(durationMinutesInput.value || 0);
+      /**
+       * Clears any displayed error messages for the Daily Calculator.
+       */
+      function clearDailyError() {
+        document.getElementById("daily-error-message").classList.add("hidden");
+        document.getElementById("daily-error-message").textContent = "";
+      }
 
-                // Basic validation
-                if (isNaN(noiseLevel) || noiseLevel < 0) {
-                    displayDailyError(`Invalid Noise Level in row ${index + 1}. Please enter a non-negative number.`);
-                    isValid = false;
-                    return;
-                }
-                if (isNaN(durationHours) || durationHours < 0 || isNaN(durationMinutes) || durationMinutes < 0) {
-                    displayDailyError(`Invalid Duration in row ${index + 1}. Please enter non-negative numbers for hours and minutes.`);
-                    isValid = false;
-                    return;
-                }
-                if (durationHours === 0 && durationMinutes === 0) {
-                    // Allow zero duration if there are other entries, but warn if it's the only entry
-                    if (inputGroups.length === 1) {
-                         displayDailyError("Please enter a duration for the noise sample.");
-                         isValid = false;
-                         return;
-                    }
-                }
+      /**
+       * Calculates the 8-hour Time-Weighted Average (TWA) noise exposure ($L_{EX,8h}$).
+       */
+      function calculateNoiseExposure() {
+        clearDailyError(); // Clear previous errors
+        const samples = [];
+        let isValid = true;
 
-                const totalDurationInHours = durationHours + (durationMinutes / 60);
-                if (totalDurationInHours > 0) { // Only add samples with actual duration
-                    samples.push({
-                        noiseLevel: noiseLevel,
-                        duration: totalDurationInHours
-                    });
-                }
+        // Get all input rows for the daily calculator
+        const inputGroups = document.querySelectorAll(
+          "#samples-container .input-group"
+        );
+
+        if (inputGroups.length === 0) {
+          displayDailyError("Please add at least one noise sample.");
+          return;
+        }
+
+        inputGroups.forEach((group, index) => {
+          const noiseLevelInput = group.querySelector(
+            `input[id^="noiseLevel"]`
+          );
+          const durationHoursInput = group.querySelector(
+            `input[id^="duration"]`
+          );
+          const durationMinutesInput = group.querySelector(
+            `input[id^="durationMinutes"]`
+          );
+
+          const noiseLevel = parseFloat(noiseLevelInput.value);
+          const durationHours = parseFloat(durationHoursInput.value || 0);
+          const durationMinutes = parseFloat(durationMinutesInput.value || 0);
+
+          // Basic validation
+          if (isNaN(noiseLevel) || noiseLevel < 0) {
+            displayDailyError(
+              `Invalid Noise Level in row ${
+                index + 1
+              }. Please enter a non-negative number.`
+            );
+            isValid = false;
+            return;
+          }
+          if (
+            isNaN(durationHours) ||
+            durationHours < 0 ||
+            isNaN(durationMinutes) ||
+            durationMinutes < 0
+          ) {
+            displayDailyError(
+              `Invalid Duration in row ${
+                index + 1
+              }. Please enter non-negative numbers for hours and minutes.`
+            );
+            isValid = false;
+            return;
+          }
+          if (durationHours === 0 && durationMinutes === 0) {
+            // Allow zero duration if there are other entries, but warn if it's the only entry
+            if (inputGroups.length === 1) {
+              displayDailyError(
+                "Please enter a duration for the noise sample."
+              );
+              isValid = false;
+              return;
+            }
+          }
+
+          const totalDurationInHours = durationHours + durationMinutes / 60;
+          if (totalDurationInHours > 0) {
+            // Only add samples with actual duration
+            samples.push({
+              noiseLevel: noiseLevel,
+              duration: totalDurationInHours,
             });
+          }
+        });
 
-            if (!isValid) {
-                return; // Stop if any validation failed
-            }
+        if (!isValid) {
+          return; // Stop if any validation failed
+        }
 
-            if (samples.length === 0) {
-                displayDailyError("No valid noise samples with duration were entered. Please add at least one.");
-                return;
-            }
+        if (samples.length === 0) {
+          displayDailyError(
+            "No valid noise samples with duration were entered. Please add at least one."
+          );
+          return;
+        }
 
-            let sumOfEnergyContributions = 0;
-            let totalExposureDurationHours = 0;
+        let sumOfEnergyContributions = 0;
+        let totalExposureDurationHours = 0;
 
-            // Step 1 & 2: Calculate sum of energy contributions and total exposure duration
-            samples.forEach(sample => {
-                // Convert dB(A) to linear energy scale
-                const linearEnergy = Math.pow(10, 0.1 * sample.noiseLevel);
-                sumOfEnergyContributions += sample.duration * linearEnergy;
-                totalExposureDurationHours += sample.duration;
-            });
+        // Step 1 & 2: Calculate sum of energy contributions and total exposure duration
+        samples.forEach((sample) => {
+          // Convert dB(A) to linear energy scale
+          const linearEnergy = Math.pow(10, 0.1 * sample.noiseLevel);
+          sumOfEnergyContributions += sample.duration * linearEnergy;
+          totalExposureDurationHours += sample.duration;
+        });
 
-            if (totalExposureDurationHours === 0) {
-                displayDailyError("Total exposure duration cannot be zero. Please enter valid durations.");
-                return;
-            }
+        if (totalExposureDurationHours === 0) {
+          displayDailyError(
+            "Total exposure duration cannot be zero. Please enter valid durations."
+          );
+          return;
+        }
 
-            // Step 3: Calculate L_P,eqT (Equivalent continuous A-weighted sound pressure level over actual exposure duration)
-            const LpeqT = 10 * Math.log10(sumOfEnergyContributions / totalExposureDurationHours);
+        // Step 3: Calculate L_P,eqT (Equivalent continuous A-weighted sound pressure level over actual exposure duration)
+        const LpeqT =
+          10 *
+          Math.log10(sumOfEnergyContributions / totalExposureDurationHours);
 
-            // Step 4: Normalize to an 8-hour workday to get L_EX,8h
-            const referenceDurationHours = 8;
-            let Lex8h = LpeqT + 10 * Math.log10(totalExposureDurationHours / referenceDurationHours);
+        // Step 4: Normalize to an 8-hour workday to get L_EX,8h
+        const referenceDurationHours = 8;
+        let Lex8h =
+          LpeqT +
+          10 * Math.log10(totalExposureDurationHours / referenceDurationHours);
 
-            // Round to two decimal places for display
-            Lex8h = Lex8h.toFixed(2);
+        // Round to two decimal places for display
+        Lex8h = Lex8h.toFixed(2);
 
-            // Display results
-            const resultsDiv = document.getElementById('daily-results');
-            const lex8hResultSpan = document.getElementById('lex8hResult');
-            const messageDiv = document.getElementById('daily-message');
-            const riskAssessmentMessageDiv = document.getElementById('risk-assessment-message');
+        // Display results
+        const resultsDiv = document.getElementById("daily-results");
+        const lex8hResultSpan = document.getElementById("lex8hResult");
+        const messageDiv = document.getElementById("daily-message");
+        const riskAssessmentMessageDiv = document.getElementById(
+          "risk-assessment-message"
+        );
 
-            lex8hResultSpan.textContent = `${Lex8h} dB(A)`;
-            resultsDiv.classList.remove('hidden');
-            messageDiv.classList.remove('message-success', 'message-warning', 'message-error');
-            riskAssessmentMessageDiv.classList.add('hidden'); // Hide previous risk assessment warnings
+        lex8hResultSpan.textContent = `${Lex8h} dB(A)`;
+        resultsDiv.classList.remove("hidden");
+        messageDiv.classList.remove(
+          "message-success",
+          "message-warning",
+          "message-error"
+        );
+        riskAssessmentMessageDiv.classList.add("hidden"); // Hide previous risk assessment warnings
 
-            // Provide feedback based on UK action and limit values
-            const lex8hValue = parseFloat(Lex8h);
-            if (lex8hValue >= 87) {
-                messageDiv.classList.add('message-error');
-                messageDiv.innerHTML = `<strong>Danger!</strong> The calculated L<sub>EX,8h</sub> (${Lex8h} dB(A)) is at or above the Exposure Limit Value (87 dB(A)). Immediate action is required to reduce exposure.`;
-            } else if (lex8hValue >= 85) {
-                messageDiv.classList.add('message-error');
-                messageDiv.innerHTML = `<strong>Warning!</strong> The calculated L<sub>EX,8h</sub> (${Lex8h} dB(A)) is at or above the Upper Exposure Action Value (85 dB(A)). Employers must take action to reduce exposure.`;
-            } else if (lex8hValue >= 80) {
-                messageDiv.classList.add('message-warning');
-                messageDiv.innerHTML = `<strong>Attention!</strong> The calculated L<sub>EX,8h</sub> (${Lex8h} dB(A)) is at or above the Lower Exposure Action Value (80 dB(A)). Employers must assess risks and provide information/training.`;
-            } else {
-                messageDiv.classList.add('message-success');
-                messageDiv.innerHTML = `The calculated L<sub>EX,8h</sub> (${Lex8h} dB(A)) is below the Lower Exposure Action Value (80 dB(A)). Good work!`;
-            }
+        // Provide feedback based on UK action and limit values
+        const lex8hValue = parseFloat(Lex8h);
+        if (lex8hValue >= 87) {
+          messageDiv.classList.add("message-error");
+          messageDiv.innerHTML = `<strong>Danger!</strong> The calculated L<sub>EX,8h</sub> (${Lex8h} dB(A)) is at or above the Exposure Limit Value (87 dB(A)). Immediate action is required to reduce exposure.`;
+        } else if (lex8hValue >= 85) {
+          messageDiv.classList.add("message-error");
+          messageDiv.innerHTML = `<strong>Warning!</strong> The calculated L<sub>EX,8h</sub> (${Lex8h} dB(A)) is at or above the Upper Exposure Action Value (85 dB(A)). Employers must take action to reduce exposure.`;
+        } else if (lex8hValue >= 80) {
+          messageDiv.classList.add("message-warning");
+          messageDiv.innerHTML = `<strong>Attention!</strong> The calculated L<sub>EX,8h</sub> (${Lex8h} dB(A)) is at or above the Lower Exposure Action Value (80 dB(A)). Employers must assess risks and provide information/training.`;
+        } else {
+          messageDiv.classList.add("message-success");
+          messageDiv.innerHTML = `The calculated L<sub>EX,8h</sub> (${Lex8h} dB(A)) is below the Lower Exposure Action Value (80 dB(A)). Good work!`;
+        }
 
-            // --- New Risk Assessment Guidance Check ---
-            let riskAssessmentNeeded = false;
-            let riskAssessmentDetails = [];
+        // --- New Risk Assessment Guidance Check ---
+        let riskAssessmentNeeded = false;
+        let riskAssessmentDetails = [];
 
-            samples.forEach(sample => {
-                const noiseLevel = sample.noiseLevel;
-                const duration = sample.duration; // in hours
+        samples.forEach((sample) => {
+          const noiseLevel = sample.noiseLevel;
+          const duration = sample.duration; // in hours
 
-                if (noiseLevel >= 90 && duration >= (45 / 60)) { // 45 minutes = 0.75 hours
-                    riskAssessmentNeeded = true;
-                    riskAssessmentDetails.push(`Noise level of ${noiseLevel} dB(A) for ${duration.toFixed(2)} hours (exceeds 45 minutes for 90 dB(A) noise).`);
-                } else if (noiseLevel >= 85 && duration >= 2) {
-                    riskAssessmentNeeded = true;
-                    riskAssessmentDetails.push(`Noise level of ${noiseLevel} dB(A) for ${duration.toFixed(2)} hours (exceeds 2 hours for 85 dB(A) noise).`);
-                } else if (noiseLevel >= 80 && duration >= 6) {
-                    riskAssessmentNeeded = true;
-                    riskAssessmentDetails.push(`Noise level of ${noiseLevel} dB(A) for ${duration.toFixed(2)} hours (exceeds 6 hours for 80 dB(A) noise).`);
-                }
-            });
+          if (noiseLevel >= 90 && duration >= 45 / 60) {
+            // 45 minutes = 0.75 hours
+            riskAssessmentNeeded = true;
+            riskAssessmentDetails.push(
+              `Noise level of ${noiseLevel} dB(A) for ${duration.toFixed(
+                2
+              )} hours (exceeds 45 minutes for 90 dB(A) noise).`
+            );
+          } else if (noiseLevel >= 85 && duration >= 2) {
+            riskAssessmentNeeded = true;
+            riskAssessmentDetails.push(
+              `Noise level of ${noiseLevel} dB(A) for ${duration.toFixed(
+                2
+              )} hours (exceeds 2 hours for 85 dB(A) noise).`
+            );
+          } else if (noiseLevel >= 80 && duration >= 6) {
+            riskAssessmentNeeded = true;
+            riskAssessmentDetails.push(
+              `Noise level of ${noiseLevel} dB(A) for ${duration.toFixed(
+                2
+              )} hours (exceeds 6 hours for 80 dB(A) noise).`
+            );
+          }
+        });
 
-            if (riskAssessmentNeeded) {
-                riskAssessmentMessageDiv.classList.remove('hidden');
-                let detailsHtml = riskAssessmentDetails.map(detail => `<li>${detail}</li>`).join('');
-                riskAssessmentMessageDiv.innerHTML = `
+        if (riskAssessmentNeeded) {
+          riskAssessmentMessageDiv.classList.remove("hidden");
+          let detailsHtml = riskAssessmentDetails
+            .map((detail) => `<li>${detail}</li>`)
+            .join("");
+          riskAssessmentMessageDiv.innerHTML = `
                     <p class="font-bold mb-2">Risk Assessment Prompt:</p>
                     <p>Based on individual noise samples, HSE's L108/2001 guidance states a risk assessment is needed:</p>
                     <ul class="list-disc list-inside mt-2">
@@ -480,126 +776,147 @@
                     </ul>
                     <p class="mt-2">This guidance is based on typical scenarios where a risk assessment is needed if the noise is like this for more than the specified duration.</p>
                 `;
+        }
+      }
+
+      /**
+       * Displays an error message for the Weekly Calculator.
+       * @param {string} msg The message to display.
+       */
+      function displayWeeklyError(msg) {
+        const errorMessageDiv = document.getElementById("weekly-error-message");
+        errorMessageDiv.textContent = msg;
+        errorMessageDiv.classList.remove("hidden");
+        document.getElementById("weekly-results").classList.add("hidden"); // Hide results if there's an error
+      }
+
+      /**
+       * Clears any displayed error messages for the Weekly Calculator.
+       */
+      function clearWeeklyError() {
+        document.getElementById("weekly-error-message").classList.add("hidden");
+        document.getElementById("weekly-error-message").textContent = "";
+      }
+
+      /**
+       * Clears all input fields and results for the Weekly Noise Exposure Calculator.
+       */
+      function clearWeeklyForm() {
+        for (let i = 0; i < 7; i++) {
+          const input = document.getElementById(`dailyLex8h_${i}`);
+          if (input) {
+            input.value = "";
+          }
+        }
+        document.getElementById("weekly-results").classList.add("hidden");
+        clearWeeklyError();
+      }
+
+      /**
+       * Calculates the Weekly Average Noise Exposure ($L_{EX,w}$).
+       */
+      function calculateWeeklyNoiseExposure() {
+        clearWeeklyError();
+        const dailyLex8hValues = [];
+        let isValid = true;
+        const numberOfDaysInWeek = 7; // Now for 7 days
+
+        for (let i = 0; i < numberOfDaysInWeek; i++) {
+          const input = document.getElementById(`dailyLex8h_${i}`);
+          const value = parseFloat(input.value);
+
+          // If input is empty, treat as 0 for calculation purposes, but don't add to dailyLex8hValues
+          // unless it's a valid number. This ensures we only average over days with actual input.
+          if (input.value === "" || isNaN(value) || value < 0) {
+            // If the field is empty or invalid, and it's not explicitly 0, we can skip it for averaging
+            // unless it's the only input, then we'll flag an error.
+            if (input.value !== "" && (isNaN(value) || value < 0)) {
+              // If something was typed but invalid
+              displayWeeklyError(
+                `Invalid L<sub>EX,8h</sub> for Day ${
+                  i + 1
+                }. Please enter a non-negative number.`
+              );
+              isValid = false;
+              return;
             }
+            // If empty, it's treated as no exposure for that day, and not included in the average count
+          } else {
+            dailyLex8hValues.push(value);
+          }
         }
 
-        /**
-         * Displays an error message for the Weekly Calculator.
-         * @param {string} msg The message to display.
-         */
-        function displayWeeklyError(msg) {
-            const errorMessageDiv = document.getElementById('weekly-error-message');
-            errorMessageDiv.textContent = msg;
-            errorMessageDiv.classList.remove('hidden');
-            document.getElementById('weekly-results').classList.add('hidden'); // Hide results if there's an error
+        if (!isValid) {
+          return;
         }
 
-        /**
-         * Clears any displayed error messages for the Weekly Calculator.
-         */
-        function clearWeeklyError() {
-            document.getElementById('weekly-error-message').classList.add('hidden');
-            document.getElementById('weekly-error-message').textContent = '';
+        if (dailyLex8hValues.length === 0) {
+          displayWeeklyError(
+            "Please enter at least one Daily L<sub>EX,8h</sub> value to calculate the weekly average."
+          );
+          return;
         }
 
-        /**
-         * Clears all input fields and results for the Weekly Noise Exposure Calculator.
-         */
-        function clearWeeklyForm() {
-            for (let i = 0; i < 7; i++) {
-                const input = document.getElementById(`dailyLex8h_${i}`);
-                if (input) {
-                    input.value = '';
-                }
-            }
-            document.getElementById('weekly-results').classList.add('hidden');
-            clearWeeklyError();
-        }
-
-        /**
-         * Calculates the Weekly Average Noise Exposure ($L_{EX,w}$).
-         */
-        function calculateWeeklyNoiseExposure() {
-            clearWeeklyError();
-            const dailyLex8hValues = [];
-            let isValid = true;
-            const numberOfDaysInWeek = 7; // Now for 7 days
-
-            for (let i = 0; i < numberOfDaysInWeek; i++) {
-                const input = document.getElementById(`dailyLex8h_${i}`);
-                const value = parseFloat(input.value);
-
-                // If input is empty, treat as 0 for calculation purposes, but don't add to dailyLex8hValues
-                // unless it's a valid number. This ensures we only average over days with actual input.
-                if (input.value === "" || isNaN(value) || value < 0) {
-                    // If the field is empty or invalid, and it's not explicitly 0, we can skip it for averaging
-                    // unless it's the only input, then we'll flag an error.
-                    if (input.value !== "" && (isNaN(value) || value < 0)) { // If something was typed but invalid
-                        displayWeeklyError(`Invalid L<sub>EX,8h</sub> for Day ${i + 1}. Please enter a non-negative number.`);
-                        isValid = false;
-                        return;
-                    }
-                    // If empty, it's treated as no exposure for that day, and not included in the average count
-                } else {
-                    dailyLex8hValues.push(value);
-                }
-            }
-
-            if (!isValid) {
-                return;
-            }
-
-            if (dailyLex8hValues.length === 0) {
-                displayWeeklyError("Please enter at least one Daily L<sub>EX,8h</sub> value to calculate the weekly average.");
-                return;
-            }
-
-            let sumOfDailyEnergies = 0;
-            dailyLex8hValues.forEach(lex8h => {
-                sumOfDailyEnergies += Math.pow(10, 0.1 * lex8h);
-            });
-
-            // Calculate L_EX,w
-            // The formula averages the linear energies over the number of days with valid input (non-empty, non-negative).
-            // This implicitly handles cases where someone works fewer than 7 days, as only entered values contribute.
-            let LexW = 10 * Math.log10(sumOfDailyEnergies / dailyLex8hValues.length);
-
-            LexW = LexW.toFixed(2);
-
-            const weeklyResultsDiv = document.getElementById('weekly-results');
-            const lexwResultSpan = document.getElementById('lexwResult');
-            const weeklyMessageDiv = document.getElementById('weekly-message');
-
-            lexwResultSpan.textContent = `${LexW} dB(A)`;
-            weeklyResultsDiv.classList.remove('hidden');
-            weeklyMessageDiv.classList.remove('message-success', 'message-warning', 'message-error');
-
-            // Provide feedback based on UK weekly action/limit values (often similar to daily, but good to clarify)
-            const lexwValue = parseFloat(LexW);
-            if (lexwValue >= 87) {
-                weeklyMessageDiv.classList.add('message-error');
-                weeklyMessageDiv.innerHTML = `<strong>Danger!</strong> The calculated L<sub>EX,w</sub> (${LexW} dB(A)) is at or above the Exposure Limit Value (87 dB(A)). Immediate action is required to reduce exposure.`;
-            } else if (lexwValue >= 85) {
-                weeklyMessageDiv.classList.add('message-error');
-                weeklyMessageDiv.innerHTML = `<strong>Warning!</strong> The calculated L<sub>EX,w</sub> (${LexW} dB(A)) is at or above the Upper Exposure Action Value (85 dB(A)). Employers must take action to reduce exposure.`;
-            } else if (lexwValue >= 80) {
-                weeklyMessageDiv.classList.add('message-warning');
-                weeklyMessageDiv.innerHTML = `<strong>Attention!</strong> The calculated L<sub>EX,w</sub> (${LexW} dB(A)) is at or above the Lower Exposure Action Value (80 dB(A)). Employers must assess risks and provide information/training.`;
-            } else {
-                weeklyMessageDiv.classList.add('message-success');
-                weeklyMessageDiv.innerHTML = `The calculated L<sub>EX,w</sub> (${LexW} dB(A)) is below the Lower Exposure Action Value (80 dB(A)). Good work!`;
-            }
-        }
-
-        // Initialize with one sample row on load for the daily calculator
-        document.addEventListener('DOMContentLoaded', () => {
-            // Hide the remove button for the initial row as it's the only one
-            const initialRowRemoveBtn = document.getElementById(`sampleRow0`)?.querySelector('.btn-danger');
-            if (initialRowRemoveBtn) {
-                initialRowRemoveBtn.style.display = 'none';
-            }
+        let sumOfDailyEnergies = 0;
+        dailyLex8hValues.forEach((lex8h) => {
+          sumOfDailyEnergies += Math.pow(10, 0.1 * lex8h);
         });
 
+        // Calculate L_EX,w
+        // The formula averages the linear energies over the number of days with valid input (non-empty, non-negative).
+        // This implicitly handles cases where someone works fewer than 7 days, as only entered values contribute.
+        let LexW =
+          10 * Math.log10(sumOfDailyEnergies / dailyLex8hValues.length);
+
+        LexW = LexW.toFixed(2);
+
+        const weeklyResultsDiv = document.getElementById("weekly-results");
+        const lexwResultSpan = document.getElementById("lexwResult");
+        const weeklyMessageDiv = document.getElementById("weekly-message");
+
+        lexwResultSpan.textContent = `${LexW} dB(A)`;
+        weeklyResultsDiv.classList.remove("hidden");
+        weeklyMessageDiv.classList.remove(
+          "message-success",
+          "message-warning",
+          "message-error"
+        );
+
+        // Provide feedback based on UK weekly action/limit values (often similar to daily, but good to clarify)
+        const lexwValue = parseFloat(LexW);
+        if (lexwValue >= 87) {
+          weeklyMessageDiv.classList.add("message-error");
+          weeklyMessageDiv.innerHTML = `<strong>Danger!</strong> The calculated L<sub>EX,w</sub> (${LexW} dB(A)) is at or above the Exposure Limit Value (87 dB(A)). Immediate action is required to reduce exposure.`;
+        } else if (lexwValue >= 85) {
+          weeklyMessageDiv.classList.add("message-error");
+          weeklyMessageDiv.innerHTML = `<strong>Warning!</strong> The calculated L<sub>EX,w</sub> (${LexW} dB(A)) is at or above the Upper Exposure Action Value (85 dB(A)). Employers must take action to reduce exposure.`;
+        } else if (lexwValue >= 80) {
+          weeklyMessageDiv.classList.add("message-warning");
+          weeklyMessageDiv.innerHTML = `<strong>Attention!</strong> The calculated L<sub>EX,w</sub> (${LexW} dB(A)) is at or above the Lower Exposure Action Value (80 dB(A)). Employers must assess risks and provide information/training.`;
+        } else {
+          weeklyMessageDiv.classList.add("message-success");
+          weeklyMessageDiv.innerHTML = `The calculated L<sub>EX,w</sub> (${LexW} dB(A)) is below the Lower Exposure Action Value (80 dB(A)). Good work!`;
+        }
+      }
+
+      // Initialize with one sample row on load for the daily calculator
+      document.addEventListener("DOMContentLoaded", () => {
+        // Hide the remove button for the initial row as it's the only one
+        const initialRowRemoveBtn = document
+          .getElementById(`sampleRow0`)
+          ?.querySelector(".btn-danger");
+        if (initialRowRemoveBtn) {
+          initialRowRemoveBtn.style.display = "none";
+        }
+      });
+      // Send height for Parent iframe
+      function sendHeight() {
+        const height = document.body.scrollHeight;
+        window.parent.postMessage({ iframeHeight: height }, "*");
+      }
+
+      window.onload = sendHeight;
+      window.onresize = sendHeight;
     </script>
-</body>
+  </body>
 </html>
